@@ -23,3 +23,18 @@ export enum AvailableResolutions {
 export interface BdStateType {
   videos: VideoType[];
 }
+
+export interface CreateVideoRequestType {
+  title?: string;
+  author?: string;
+  availableResolutions?: AvailableResolutions;
+}
+
+export interface ErrorMessageType {
+  message: string;
+  field: string;
+}
+
+export interface ErrorMessageResult {
+  errorsMessages: ErrorMessageType[];
+}
