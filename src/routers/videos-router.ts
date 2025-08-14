@@ -66,8 +66,6 @@ videosRouter.get(
       (video) => video.id === Number(currentVideoId),
     );
 
-    console.log(currentVideo, "currentVideo");
-
     if (currentVideo) {
       res.status(200).send(currentVideo);
     } else {
@@ -129,7 +127,9 @@ videosRouter.put(
     };
 
     // Находим индекс и заменяем элемент
-    const videoIndex = Db.videos.findIndex(video => video.id === Number(currentVideoId));
+    const videoIndex = Db.videos.findIndex(
+      (video) => video.id === Number(currentVideoId),
+    );
 
     if (videoIndex !== -1) {
       Db.videos[videoIndex] = updatedVideo;
