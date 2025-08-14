@@ -1,6 +1,10 @@
 import { Request, Response, Router } from "express";
 import { Db } from "../db/db";
-import { RequestWithBody } from "../types/requst-types";
+import {
+  GetCurrentVideoProps,
+  RequestWithBody,
+  RequestWithParams,
+} from "../types/requst-types";
 import { CreateVideoRequestType, VideoType } from "../types/types";
 import { getVideoValidateForCreate } from "../validators/videos-vallidator";
 
@@ -26,19 +30,38 @@ videosRouter.post(
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       const newVideo: VideoType = {
-        id: new Date().getDay(),
+        id: new Date().getMilliseconds(),
         title,
         author,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date().getDay().toString(),
-        publicationDate: tomorrow.getDay().toString(),
+        createdAt: new Date().toString(),
+        publicationDate: tomorrow.toString(),
         availableResolutions,
       };
 
       Db.videos.push(newVideo);
 
       res.status(201).send(newVideo);
+    }
+  },
+);
+
+videosRouter.get(
+  "/:id",
+  (req: RequestWithParams<GetCurrentVideoProps>, res: Response) => {
+    const currentVideoId = req.params.id;
+
+    const currentVideo = Db.videos.find(
+      (video) => video.id === Number(currentVideoId),
+    );
+
+    console.log(currentVideo,'currentVideo');
+
+    if (currentVideo) {
+      res.status(200).send(currentVideo);
+    } else {
+      res.status(404);
     }
   },
 );

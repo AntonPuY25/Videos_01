@@ -21,14 +21,6 @@ describe("Videos Tests", () => {
       availableResolutions: [AvailableResolutions.P720],
     };
 
-    const wrongDataForNewVideo: CreateVideoRequestType = {
-      title: "Супермен",
-      author:
-        "Джерри СигелДжерри СигелДжерри СигелДжерри СигелДжерри СигелДжерри" +
-        " СигелДжерри СигелДжерри СигелДжерри СигелДжерри Сигел",
-      availableResolutions: [AvailableResolutions.P720],
-    };
-
     const createdVideo = await request(app)
       .post("/videos")
       .send(dataForNewVideo)
@@ -38,12 +30,11 @@ describe("Videos Tests", () => {
     expect(createdVideo.body.author).toBe(dataForNewVideo.author);
     expect(Array.isArray(createdVideo.body.availableResolutions)).toBeTruthy();
 
-    const resultVideos = await request(app).get("/videos").expect(200);
+    const resultVideos = await request(app)
+      .get(`/videos/${createdVideo.body.id}`)
+      .expect(200);
 
-    expect(resultVideos.body.length).toBe(1);
-    expect(Array.isArray(resultVideos.body)).toBe(true);
-
-    expect(resultVideos.body[0].title).toBe(dataForNewVideo.title);
+    expect(resultVideos.body.title).toBe(dataForNewVideo.title);
   });
 
   it(`should  get error for create new video with large author '`, async () => {
