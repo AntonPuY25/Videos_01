@@ -48,14 +48,22 @@ export const getVideoValidateForCreate = (params: CreateVideoRequestType) => {
       });
     }
 
-    if (params?.availableResolutions?.length) {
-      const isNotContainsAvailableResolutionsFromDefault = Object.values(
-        AvailableResolutions,
-      ).map((availableResolution) => {
-        return !params.availableResolutions?.includes(availableResolution);
+    if (!params?.availableResolutions?.length) {
+      errors.errorsMessages.push({
+        message: `Данные Available Resolutions обязательный параметр`,
+        field: "availableResolutions",
       });
+    }
 
-      if (isNotContainsAvailableResolutionsFromDefault.length) {
+    if (params?.availableResolutions?.length) {
+      const isNotContainsAvailableResolutionsFromDefault =
+        params.availableResolutions?.filter((availableResolution) => {
+          return !Object.values(AvailableResolutions).includes(
+            availableResolution,
+          );
+        });
+
+      if (isNotContainsAvailableResolutionsFromDefault?.length) {
         errors.errorsMessages.push({
           message: `Данные Available Resolutions ${isNotContainsAvailableResolutionsFromDefault.join(",")}
           не состоят в списке Resolutions по умолчанию`,

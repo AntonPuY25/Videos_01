@@ -6,7 +6,7 @@ export interface VideoType {
   minAgeRestriction: null | number;
   createdAt: string;
   publicationDate: string;
-  availableResolutions: AvailableResolutions;
+  availableResolutions: AvailableResolutions[];
 }
 
 export enum AvailableResolutions {
@@ -27,7 +27,7 @@ export interface BdStateType {
 export interface CreateVideoRequestType {
   title?: string;
   author?: string;
-  availableResolutions?: AvailableResolutions;
+  availableResolutions?: AvailableResolutions[];
 }
 
 export interface ErrorMessageType {

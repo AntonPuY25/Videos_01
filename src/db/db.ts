@@ -10,7 +10,7 @@ export const Db:BdStateType = {
       minAgeRestriction: 16,
       createdAt: "2025-08-13T17:22:16.116Z",
       publicationDate: "2025-08-14T17:22:16.116Z",
-      availableResolutions: AvailableResolutions.P144
+      availableResolutions: [AvailableResolutions.P144]
     },
     {
       id: 2,
@@ -20,7 +20,7 @@ export const Db:BdStateType = {
       minAgeRestriction: 18,
       createdAt: "2025-09-16T17:22:16.116Z",
       publicationDate: "2025-08-17T17:22:16.116Z",
-      availableResolutions: AvailableResolutions.P2160
+      availableResolutions: [AvailableResolutions.P2160]
     }
   ]
 }
