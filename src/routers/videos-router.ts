@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { Db } from "../db/db";
 import { RequestWithBody } from "../types/requst-types";
-import { CreateVideoRequestType } from "../types/types";
+import { CreateVideoRequestType, VideoType } from "../types/types";
 import { getVideoValidateForCreate } from "../validators/videos-vallidator";
 
 export const videosRouter = Router({});
@@ -19,6 +19,26 @@ videosRouter.post(
       res.status(400).send(errors.errorsMessages);
     }
 
-    res.status(201).send(Db.videos);
+    const { title, author, availableResolutions } = req.body;
+
+    if (title && author && availableResolutions) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const newVideo: VideoType = {
+        id: new Date().getDay(),
+        title,
+        author,
+        canBeDownloaded: false,
+        minAgeRestriction: null,
+        createdAt: new Date().getDay().toString(),
+        publicationDate: tomorrow.getDay().toString(),
+        availableResolutions,
+      };
+
+      Db.videos.push(newVideo);
+
+      res.status(201).send(newVideo);
+    }
   },
 );

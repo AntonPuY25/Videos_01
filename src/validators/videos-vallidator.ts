@@ -1,4 +1,8 @@
-import { CreateVideoRequestType, ErrorMessageResult } from "../types/types";
+import {
+  AvailableResolutions,
+  CreateVideoRequestType,
+  ErrorMessageResult,
+} from "../types/types";
 
 export const getVideoValidateForCreate = (params: CreateVideoRequestType) => {
   let errors: ErrorMessageResult = {
@@ -28,6 +32,36 @@ export const getVideoValidateForCreate = (params: CreateVideoRequestType) => {
         message: `${String(requiredKey)} is required`,
         field: String(requiredKey),
       });
+    }
+
+    if (params?.title && params.title?.trim()?.length > 40) {
+      errors.errorsMessages.push({
+        message: `Максимальная длинна title 40`,
+        field: "title",
+      });
+    }
+
+    if (params?.author && params.author?.trim()?.length > 20) {
+      errors.errorsMessages.push({
+        message: `Максимальная длинна author 20`,
+        field: "author",
+      });
+    }
+
+    if (params?.availableResolutions?.length) {
+      const isNotContainsAvailableResolutionsFromDefault = Object.values(
+        AvailableResolutions,
+      ).map((availableResolution) => {
+        return !params.availableResolutions?.includes(availableResolution);
+      });
+
+      if (isNotContainsAvailableResolutionsFromDefault.length) {
+        errors.errorsMessages.push({
+          message: `Данные Available Resolutions ${isNotContainsAvailableResolutionsFromDefault.join(",")}
+          не состоят в списке Resolutions по умолчанию`,
+          field: "availableResolutions",
+        });
+      }
     }
   });
 

@@ -3,7 +3,7 @@ export interface VideoType {
   title: string;
   author: string;
   canBeDownloaded: boolean;
-  minAgeRestriction: number;
+  minAgeRestriction: null | number;
   createdAt: string;
   publicationDate: string;
   availableResolutions: AvailableResolutions;
