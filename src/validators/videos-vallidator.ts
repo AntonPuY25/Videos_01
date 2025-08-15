@@ -62,8 +62,9 @@ export const getVideoValidateForCreate = (
     if (params?.availableResolutions?.length) {
       const isNotContainsAvailableResolutionsFromDefault =
         params.availableResolutions?.filter((availableResolution) => {
-          return !Object.values(AvailableResolutions).includes(
-            availableResolution,
+          return (
+            !Object.keys(AvailableResolutions).includes(availableResolution) &&
+            !Object.values(AvailableResolutions).includes(availableResolution)
           );
         });
 

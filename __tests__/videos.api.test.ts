@@ -90,7 +90,6 @@ describe("Videos Tests", () => {
       availableResolutions: [
         AvailableResolutions.P720,
         AvailableResolutions.P2160,
-        AvailableResolutions.P2160,
         AvailableResolutions.P144,
       ],
       publicationDate: dayAfterDay.toString(),
