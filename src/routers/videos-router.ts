@@ -69,7 +69,7 @@ videosRouter.get(
     if (currentVideo) {
       res.status(200).send(currentVideo);
     } else {
-      res.status(404);
+      res.sendStatus(404);
     }
   },
 );
@@ -94,7 +94,7 @@ videosRouter.put(
 
     const currentVideoId = req.params.id;
 
-    const currentVideo = Db.videos.find(
+    const currentVideo = Db.videos?.find(
       (video) => video.id === Number(currentVideoId),
     );
 
@@ -148,16 +148,12 @@ videosRouter.delete(
       (video) => video.id === Number(currentVideoId),
     );
 
-    if (currentVideoIndex) {
-      const videoWithoutDeletedVideo = Db.videos.filter(
-        (video) => video.id !== Number(currentVideoId),
-      );
+    if (currentVideoIndex !== undefined) {
+      Db.videos.splice(currentVideoIndex, 1);
 
-      Db.videos = videoWithoutDeletedVideo;
-
-      res.status(204);
+      res.sendStatus(204);
     } else {
-      res.status(404);
+      res.sendStatus(404);
     }
   },
 );

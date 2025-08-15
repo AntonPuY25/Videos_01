@@ -124,5 +124,10 @@ describe("Videos Tests", () => {
       .expect(200);
 
     expect(resultVideosAfterUpdate.body.title).toBe(dataForUpdateVideo.title);
+
+     await request(app)
+        .delete(`/videos/${createdVideoId}`)
+        .expect(204);
+
   });
 });
