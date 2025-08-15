@@ -98,6 +98,28 @@ export const getVideoValidateForCreate = (
     }
   });
 
+  if (params?.publicationDate) {
+    const date = new Date(params.publicationDate);
+
+    // Проверяем, что это валидная дата
+    if (isNaN(date.getTime())) {
+      fieldErrors.set(
+        "publicationDate",
+        `Поле publicationDate должно быть валидной датой в формате ISO 8601`,
+      );
+    } else {
+      // Проверяем, что строка содержит время (не только дату)
+      const hasTime = /T\d{2}:\d{2}:\d{2}/.test(params.publicationDate);
+
+      if (!hasTime) {
+        fieldErrors.set(
+          "publicationDate",
+          `Поле publicationDate должно быть валидной датой в формате ISO 8601`,
+        );
+      }
+    }
+  }
+
   const errors: ErrorMessageResult = {
     errorsMessages: Array.from(fieldErrors.entries()).map(
       ([field, message]) => ({
