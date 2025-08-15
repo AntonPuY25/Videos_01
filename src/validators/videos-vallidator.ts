@@ -87,13 +87,23 @@ export const getVideoValidateForCreate = (
     }
 
     if (params?.publicationDate && params?.publicationDate) {
-      const dateValue = Date.parse(params.publicationDate);
+      // Проверяем точный формат ISO 8601 как у toISOString()
+      const isoStringRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
-      if (isNaN(dateValue)) {
+      if (!isoStringRegex.test(params.publicationDate)) {
         fieldErrors.set(
-          "publicationDate",
-          `Поле publicationDate должно быть валидной датой в формате ISO 8601`,
+            "publicationDate",
+            `Поле publicationDate должно быть в формате ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ)`,
         );
+      } else {
+        const dateValue = Date.parse(params.publicationDate);
+
+        if (isNaN(dateValue)) {
+          fieldErrors.set(
+              "publicationDate",
+              `Поле publicationDate должно быть валидной датой в формате ISO 8601`,
+          );
+        }
       }
     }
   });
@@ -107,16 +117,6 @@ export const getVideoValidateForCreate = (
         "publicationDate",
         `Поле publicationDate должно быть валидной датой в формате ISO 8601`,
       );
-    } else {
-      // Проверяем, что строка содержит время (не только дату)
-      const hasTime = /T\d{2}:\d{2}:\d{2}/.test(params.publicationDate);
-
-      if (!hasTime) {
-        fieldErrors.set(
-          "publicationDate",
-          `Поле publicationDate должно быть валидной датой в формате ISO 8601`,
-        );
-      }
     }
   }
 

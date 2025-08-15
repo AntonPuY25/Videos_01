@@ -92,7 +92,7 @@ describe("Videos Tests", () => {
         AvailableResolutions.P2160,
         AvailableResolutions.P144,
       ],
-      publicationDate: dayAfterDay.toString(),
+      publicationDate: dayAfterDay.toISOString(),
       minAgeRestriction: 12,
       canBeDownloaded: true,
     };
