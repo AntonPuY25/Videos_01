@@ -37,8 +37,6 @@ export const getVideoValidateForCreate = (
         message: `Максимальная длинна title 40`,
         field: "title",
       });
-
-      return errors;
     }
 
     if (params?.author && params.author?.trim()?.length > 20) {
@@ -46,8 +44,6 @@ export const getVideoValidateForCreate = (
         message: `Максимальная длинна author 20`,
         field: "author",
       });
-
-      return errors;
     }
 
     if (!params?.availableResolutions?.length) {
