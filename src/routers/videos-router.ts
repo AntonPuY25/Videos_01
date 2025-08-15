@@ -148,7 +148,7 @@ videosRouter.delete(
       (video) => video.id === Number(currentVideoId),
     );
 
-    if (currentVideoIndex !== undefined) {
+    if (currentVideoIndex !== undefined && currentVideoIndex !== -1) {
       Db.videos.splice(currentVideoIndex, 1);
 
       res.sendStatus(204);
