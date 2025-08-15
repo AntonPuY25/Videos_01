@@ -138,3 +138,26 @@ videosRouter.put(
     res.sendStatus(204);
   },
 );
+
+videosRouter.delete(
+  "/:id",
+  (req: RequestWithParams<GetCurrentVideoProps>, res: Response) => {
+    const currentVideoId = req.params.id;
+
+    const currentVideoIndex = Db.videos.findIndex(
+      (video) => video.id === Number(currentVideoId),
+    );
+
+    if (currentVideoIndex) {
+      const videoWithoutDeletedVideo = Db.videos.filter(
+        (video) => video.id !== Number(currentVideoId),
+      );
+
+      Db.videos = videoWithoutDeletedVideo;
+
+      res.status(204);
+    } else {
+      res.status(404);
+    }
+  },
+);
