@@ -45,8 +45,8 @@ videosRouter.post(
         author,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date().toString(),
-        publicationDate: tomorrow.toString(),
+        createdAt: new Date().toISOString(),
+        publicationDate: tomorrow.toISOString(),
         availableResolutions,
       };
 
