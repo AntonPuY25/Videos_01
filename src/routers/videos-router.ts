@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import { Db } from "../db/db";
 import {
   GetCurrentVideoProps,
   RequestWithBody,
@@ -7,13 +6,16 @@ import {
   RequestWithParams,
   UpdateCurrentVideoProps,
 } from "../types/requst-types";
-import { CreateVideoRequestType, VideoType } from "../types/types";
+import { CreateVideoRequestType } from "../types/types";
 import { getVideoValidateForCreate } from "../validators/videos-vallidator";
+import { videosRepository } from "../repositories/videos-repository";
 
 export const videosRouter = Router({});
 
 videosRouter.get("/", (req: Request, res: Response) => {
-  res.status(200).send(Db.videos);
+  const allVideos = videosRepository.getAllVideos();
+
+  res.status(200).send(allVideos);
 });
 
 videosRouter.post(
@@ -36,21 +38,11 @@ videosRouter.post(
     const { title, author, availableResolutions } = req.body;
 
     if (title && author && availableResolutions) {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-
-      const newVideo: VideoType = {
-        id: new Date().getMilliseconds(),
+      const newVideo = videosRepository.createVideo({
         title,
         author,
-        canBeDownloaded: false,
-        minAgeRestriction: null,
-        createdAt: new Date().toISOString(),
-        publicationDate: tomorrow.toISOString(),
         availableResolutions,
-      };
-
-      Db.videos.push(newVideo);
+      });
 
       res.status(201).send(newVideo);
     }
@@ -62,9 +54,7 @@ videosRouter.get(
   (req: RequestWithParams<GetCurrentVideoProps>, res: Response) => {
     const currentVideoId = req.params.id;
 
-    const currentVideo = Db.videos.find(
-      (video) => video.id === Number(currentVideoId),
-    );
+    const currentVideo = videosRepository.findCurrentVideoById(currentVideoId);
 
     if (currentVideo) {
       res.status(200).send(currentVideo);
@@ -94,15 +84,17 @@ videosRouter.put(
 
     const currentVideoId = req.params.id;
 
-    const currentVideo = Db.videos?.find(
-      (video) => video.id === Number(currentVideoId),
-    );
+    const updatedVideoResult = videosRepository.updateVideoById({
+      videoId: currentVideoId,
+      ...req.body,
+    });
 
-    if (!currentVideo) {
+    if (!updatedVideoResult) {
       res.sendStatus(404);
 
       return;
     }
+
     const body = req.body;
 
     const errors = getVideoValidateForCreate(body, requiredKeys);
@@ -111,28 +103,6 @@ videosRouter.put(
       res.status(400).send(errors);
 
       return;
-    }
-
-    const updatedVideo: VideoType = {
-      id: currentVideo.id,
-      author: body.author || currentVideo.author,
-      availableResolutions:
-        body.availableResolutions || currentVideo.availableResolutions,
-      title: body.title || currentVideo.title,
-      canBeDownloaded: body.canBeDownloaded || currentVideo.canBeDownloaded,
-      createdAt: currentVideo.createdAt,
-      minAgeRestriction:
-        body.minAgeRestriction || currentVideo.minAgeRestriction,
-      publicationDate: body.publicationDate || currentVideo.publicationDate,
-    };
-
-    // Находим индекс и заменяем элемент
-    const videoIndex = Db.videos.findIndex(
-      (video) => video.id === Number(currentVideoId),
-    );
-
-    if (videoIndex !== -1) {
-      Db.videos[videoIndex] = updatedVideo;
     }
 
     res.sendStatus(204);
@@ -144,13 +114,9 @@ videosRouter.delete(
   (req: RequestWithParams<GetCurrentVideoProps>, res: Response) => {
     const currentVideoId = req.params.id;
 
-    const currentVideoIndex = Db.videos.findIndex(
-      (video) => video.id === Number(currentVideoId),
-    );
+    const deletedVideoResult = videosRepository.deleteVideoById(currentVideoId);
 
-    if (currentVideoIndex !== undefined && currentVideoIndex !== -1) {
-      Db.videos.splice(currentVideoIndex, 1);
-
+    if (deletedVideoResult) {
       res.sendStatus(204);
     } else {
       res.sendStatus(404);
