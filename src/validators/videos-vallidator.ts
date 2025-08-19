@@ -26,9 +26,6 @@ export const getVideoValidateForCreate = (
       );
     }
 
-    if (params?.title && params.title?.trim()?.length > 40) {
-      fieldErrors.set("title", "Максимальная длинна title 40");
-    }
 
     if (params?.author && params.author?.trim()?.length > 20) {
       fieldErrors.set("author", "Максимальная длинна title 20");

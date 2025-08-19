@@ -9,6 +9,10 @@ import {
 import { CreateVideoRequestType } from "../types/types";
 import { getVideoValidateForCreate } from "../validators/videos-vallidator";
 import { videosRepository } from "../repositories/videos-repository";
+import {
+  getValidationErrors,
+  titleForVideoValidate,
+} from "../middleWares/validate-middleWare";
 
 export const videosRouter = Router({});
 
@@ -20,6 +24,8 @@ videosRouter.get("/", (req: Request, res: Response) => {
 
 videosRouter.post(
   "/",
+  titleForVideoValidate,
+  getValidationErrors,
   (req: RequestWithBody<CreateVideoRequestType>, res: Response) => {
     const requiredKeys: Partial<keyof UpdateCurrentVideoProps>[] = [
       "title",
