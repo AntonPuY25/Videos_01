@@ -2,7 +2,7 @@ import { Request } from "express";
 import { AvailableResolutions } from "./types";
 
 export interface GetCurrentVideoProps {
-  id: string;
+  id?: string;
 }
 
 export interface UpdateCurrentVideoProps {
